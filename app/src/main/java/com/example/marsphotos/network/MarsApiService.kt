@@ -24,7 +24,7 @@ import retrofit2.Retrofit
 import retrofit2.http.GET
 
     private const val BASE_URL =
-        "https://open.er-api.com/v6/latest/"
+        "https://v6.exchangerate-api.com/v6/a9b9139ee44673343dd8b649/"
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
@@ -39,7 +39,7 @@ import retrofit2.http.GET
      */
     interface MarsApiService {
         @GET("latest/USD")
-        suspend fun getPhotos(): List<MarsPhoto>
+        suspend fun getPhotos(): MarsPhoto
     }
 
     /**
