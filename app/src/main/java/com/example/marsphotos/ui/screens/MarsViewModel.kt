@@ -15,12 +15,16 @@
  */
 package com.example.marsphotos.ui.screens
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marsphotos.model.ApiRate
 import com.example.marsphotos.model.MarsPhoto
+import com.example.marsphotos.network.DatabaseProvider
 import com.example.marsphotos.network.MarsApi
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -35,7 +39,8 @@ sealed interface MarsUiState {
     object Loading : MarsUiState
 }
 
-class MarsViewModel : ViewModel() {
+class MarsViewModel (application: Application): AndroidViewModel(application) {
+    private val exchangeRateDao = DatabaseProvider.getDatabase(application).exchangeRateDao()
     /** The mutable State that stores the status of the most recent request */
     var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
         private set
@@ -56,6 +61,17 @@ class MarsViewModel : ViewModel() {
             marsUiState = MarsUiState.Loading
             marsUiState = try {
                 val listResult = MarsApi.retrofitService.getPhotos()
+                val timestamp = System.currentTimeMillis()
+                listResult.conversionRates.forEach { (targetCode, rate) ->
+                    exchangeRateDao.insert(
+                        ApiRate(
+                        baseCode = listResult.baseCode,
+                        targetCode = targetCode,
+                        rate = rate,
+                        timestamp = timestamp
+                    )
+                    )
+                }
                 MarsUiState.Success(
                     "Success: ${listResult.baseCode}, " +
                             "Rates ${listResult.conversionRates.getValue(listResult.baseCode)}, " +
