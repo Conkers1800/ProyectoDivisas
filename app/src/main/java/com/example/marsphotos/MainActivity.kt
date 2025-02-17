@@ -25,11 +25,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.marsphotos.ui.MarsPhotosApp
 import com.example.marsphotos.ui.theme.MarsPhotosTheme
+import com.example.marsphotos.workers.scheduleDailySync
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        scheduleDailySync(applicationContext)
         setContent {
             MarsPhotosTheme {
                 Surface(
