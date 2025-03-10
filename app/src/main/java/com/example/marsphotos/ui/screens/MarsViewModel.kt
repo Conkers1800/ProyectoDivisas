@@ -29,6 +29,8 @@ import com.example.marsphotos.network.MarsApi
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
 
 /**
  * UI state for the Home screen
@@ -62,6 +64,9 @@ class MarsViewModel (application: Application): AndroidViewModel(application) {
             marsUiState = try {
                 val listResult = MarsApi.retrofitService.getPhotos()
                 val timestamp = System.currentTimeMillis()
+                val fecha= Date(timestamp)
+                val formato=SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                val fechaCompleta=formato.format(fecha)
                 listResult.conversionRates.forEach { (targetCode, rate) ->
                     exchangeRateDao.insert(
                         ApiRate(
@@ -76,7 +81,7 @@ class MarsViewModel (application: Application): AndroidViewModel(application) {
                     "Success: ${listResult.baseCode}, " +
                             "Rates ${listResult.conversionRates.getValue(listResult.baseCode)}, " +
                             " Actualizacion anterior ${listResult.timeLastUpdateUtc}, " +
-                            " Siguiente actualizacion ${listResult.timeNextUpdateUtc}, Mars photos retrieved"
+                            " Siguiente actualizacion ${listResult.timeNextUpdateUtc}"
                 )
             } catch (e: IOException) {
                 MarsUiState.Error

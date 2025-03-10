@@ -2,6 +2,8 @@ package com.example.marsphotos.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Date
+
 
 @Entity(tableName = "exchange_rate")
 data class ApiRate(

@@ -10,7 +10,7 @@ fun scheduleDailySync(context: Context) {
         .setRequiredNetworkType(NetworkType.CONNECTED)
         .build()
 
-    val syncWorkRequest = PeriodicWorkRequestBuilder<SyncWorker>(24, TimeUnit.HOURS)
+    val syncWorkRequest = PeriodicWorkRequestBuilder<SyncWorker>(1, TimeUnit.HOURS)
         .setConstraints(constraints)
         .build()
 
